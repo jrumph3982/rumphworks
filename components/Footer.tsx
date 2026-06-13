@@ -1,0 +1,18 @@
+export default function Footer() {
+  return (
+    <footer className="bg-navy py-12">
+      <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4">
+        <img src="/logo.png" alt="Rumphworks" className="h-[100px] w-auto brightness-0 invert drop-shadow-lg" />
+        <p className="text-white/40 text-sm">
+          &copy; 2026 Rumphworks. All rights reserved.
+        </p>
+        <a
+          href="mailto:jamey.rumph@gmail.com"
+          className="text-white/60 hover:text-white text-sm transition-colors"
+        >
+          jamey.rumph@gmail.com
+        </a>
+      </div>
+    </footer>
+  );
+}
