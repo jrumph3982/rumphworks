@@ -7,10 +7,10 @@ export default function Footer() {
           &copy; 2026 Rumphworks. All rights reserved.
         </p>
         <a
-          href="mailto:jamey.rumph@gmail.com"
+          href="mailto:Jamey.Rumph@rumphworks.com"
           className="text-white/60 hover:text-white text-sm transition-colors"
         >
-          jamey.rumph@gmail.com
+          Jamey.Rumph@rumphworks.com
         </a>
       </div>
     </footer>

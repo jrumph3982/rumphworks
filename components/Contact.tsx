@@ -7,7 +7,7 @@ export default function Contact() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const { name, email, message } = form;
-    window.location.href = `mailto:jamey.rumph@gmail.com?subject=Project Inquiry from ${encodeURIComponent(name)}&body=${encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\n${message}`)}`;
+    window.location.href = `mailto:Jamey.Rumph@rumphworks.com?subject=Project Inquiry from ${encodeURIComponent(name)}&body=${encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\n${message}`)}`;
     setForm({ name: "", email: "", message: "" });
   };
 
