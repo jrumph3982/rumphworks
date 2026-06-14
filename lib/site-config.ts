@@ -3,7 +3,6 @@ export const siteConfig = {
   title: "Rumphworks — Websites & Web Apps for Small Businesses",
   description:
     "Custom websites and web applications for small businesses and entrepreneurs nationwide. Fast, reliable, and built to last.",
-  // TODO: update once the custom domain is live
   url: "https://rumphworks.com",
   keywords: [
     "web developer for small business",
