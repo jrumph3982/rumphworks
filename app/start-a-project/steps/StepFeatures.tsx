@@ -16,7 +16,19 @@ export function StepFeatures({ data, setData }: StepProps) {
         label="Which of these would be useful for your website? (choose all that apply)"
         options={FEATURE_OPTIONS}
         values={data.features}
-        onChange={(values) => setData((prev) => ({ ...prev, features: values }))}
+        onChange={(values) => {
+          const noneJustSelected = values.includes("none") && !data.features.includes("none");
+          const noneWasSelected = data.features.includes("none");
+
+          let next = values;
+          if (noneJustSelected) {
+            next = ["none"];
+          } else if (noneWasSelected && values.length > 1) {
+            next = values.filter((value) => value !== "none");
+          }
+
+          setData((prev) => ({ ...prev, features: next }));
+        }}
       />
     </div>
   );

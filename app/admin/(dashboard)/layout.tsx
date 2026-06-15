@@ -23,8 +23,8 @@ export default function AdminDashboardLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className="min-h-screen bg-slate-bg">
-      <header className="flex items-center justify-between border-b border-divider bg-white px-6 py-4">
+    <div className="min-h-screen bg-slate-bg print:bg-white">
+      <header className="print:hidden flex items-center justify-between border-b border-divider bg-white px-6 py-4">
         <div className="flex items-center gap-4">
           <span className="text-lg font-semibold text-navy">Rumphworks Admin</span>
           <Link href="/" className="text-sm text-neutral-mid transition-colors hover:text-navy">
@@ -37,7 +37,7 @@ export default function AdminDashboardLayout({
           </button>
         </form>
       </header>
-      <main className="px-6 py-8">{children}</main>
+      <main className="px-6 py-8 print:p-0">{children}</main>
     </div>
   );
 }

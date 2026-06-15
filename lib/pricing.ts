@@ -11,13 +11,15 @@ const BASE_PACKAGES: Record<EstimateTier, SuggestedItem> = {
   landing_page: { label: "Landing page - base package", price: 1000, quantity: 1 },
   business_website: { label: "Business website - base package (up to 5 pages)", price: 3000, quantity: 1 },
   dynamic_website: { label: "Custom website - starting estimate (needs scoping)", price: 5000, quantity: 1 },
+  hourly: { label: "Website modifications - estimated hours", price: 75, quantity: 5 },
 };
 
-/** Pages included in the base package before "extra page" charges kick in. Dynamic sites are scoped individually, so no extra-page charge applies. */
+/** Pages included in the base package before "extra page" charges kick in. Dynamic sites and hourly work are scoped individually, so no extra-page charge applies. */
 const BASE_PAGE_COUNT: Record<EstimateTier, number | null> = {
   landing_page: 1,
   business_website: 5,
   dynamic_website: null,
+  hourly: null,
 };
 
 const EXTRA_PAGE_PRICE = 200;
@@ -47,7 +49,9 @@ export function suggestTierFromIntake(intake: IntakeData | null): EstimateTier {
 /** Builds a starting set of line items from the chosen tier and the lead's questionnaire answers. Intended as an editable draft, not a final quote. */
 export function generateEstimateItems(intake: IntakeData | null, tier: EstimateTier): SuggestedItem[] {
   const items: SuggestedItem[] = [BASE_PACKAGES[tier]];
-  if (!intake) return items;
+
+  // Hourly/modifications work is billed purely on hours - skip the package-based add-ons below.
+  if (tier === "hourly" || !intake) return items;
 
   const baseCount = BASE_PAGE_COUNT[tier];
   if (baseCount !== null) {

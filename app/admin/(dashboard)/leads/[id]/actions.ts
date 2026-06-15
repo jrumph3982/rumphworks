@@ -103,6 +103,18 @@ export async function addEstimateItem(estimateId: number, leadId: number, formDa
   revalidatePath(`/admin/leads/${leadId}`);
 }
 
+export async function updateEstimateItem(itemId: number, estimateId: number, leadId: number, formData: FormData) {
+  const label = String(formData.get("label") || "").trim();
+  const price = Number(formData.get("price"));
+  const quantity = Number(formData.get("quantity")) || 1;
+
+  if (!label || !Number.isFinite(price)) return;
+
+  await db.update(estimateItems).set({ label, price, quantity }).where(eq(estimateItems.id, itemId));
+  await recalcEstimateTotal(estimateId);
+  revalidatePath(`/admin/leads/${leadId}`);
+}
+
 export async function deleteEstimateItem(itemId: number, estimateId: number, leadId: number) {
   await db.delete(estimateItems).where(eq(estimateItems.id, itemId));
   await recalcEstimateTotal(estimateId);
@@ -178,6 +190,25 @@ export async function addProjectTask(projectId: number, leadId: number, formData
 export async function deleteProjectTask(taskId: number, leadId: number) {
   await db.delete(projectTasks).where(eq(projectTasks.id, taskId));
   revalidatePath(`/admin/leads/${leadId}`);
+}
+
+export async function updateContractTerms(projectId: number, leadId: number, formData: FormData) {
+  const timeline = String(formData.get("timeline") || "").trim();
+  const revisionRounds = Number(formData.get("revisionRounds"));
+  const reworkRate = Number(formData.get("reworkRate"));
+  const depositPercent = Number(formData.get("depositPercent"));
+
+  await db
+    .update(projects)
+    .set({
+      timeline: timeline || null,
+      revisionRounds: Number.isFinite(revisionRounds) ? revisionRounds : 2,
+      reworkRate: Number.isFinite(reworkRate) ? reworkRate : 75,
+      depositPercent: Number.isFinite(depositPercent) ? depositPercent : 50,
+    })
+    .where(eq(projects.id, projectId));
+
+  revalidatePath(`/admin/leads/${leadId}/contract`);
 }
 
 export async function updateLeadDetails(leadId: number, formData: FormData) {

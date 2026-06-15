@@ -32,6 +32,7 @@ export const estimates = mysqlTable("estimates", {
     "landing_page",
     "business_website",
     "dynamic_website",
+    "hourly",
   ]).notNull(),
   status: mysqlEnum("status", [
     "draft",
@@ -71,6 +72,10 @@ export const projects = mysqlTable("projects", {
   ])
     .notNull()
     .default("discovery"),
+  timeline: varchar("timeline", { length: 255 }),
+  revisionRounds: int("revision_rounds").notNull().default(2),
+  reworkRate: int("rework_rate").notNull().default(75),
+  depositPercent: int("deposit_percent").notNull().default(50),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow().onUpdateNow(),
 });

@@ -1,7 +1,7 @@
 import type { Option } from "./intake";
 
 export type LeadStatus = "new" | "quoted" | "won" | "lost";
-export type EstimateTier = "landing_page" | "business_website" | "dynamic_website";
+export type EstimateTier = "landing_page" | "business_website" | "dynamic_website" | "hourly";
 export type EstimateStatus = "draft" | "sent" | "accepted" | "declined" | "expired";
 export type ProjectStatus = "discovery" | "design" | "build" | "launch" | "support";
 
@@ -16,6 +16,7 @@ export const ESTIMATE_TIER_OPTIONS: Option[] = [
   { value: "landing_page", label: "Landing Page" },
   { value: "business_website", label: "Business Website" },
   { value: "dynamic_website", label: "Dynamic / Full Website" },
+  { value: "hourly", label: "Hourly / Modifications" },
 ];
 
 export const ESTIMATE_STATUS_OPTIONS: Option[] = [

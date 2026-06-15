@@ -24,6 +24,7 @@ import {
   deleteLead,
   deleteProjectTask,
   toggleProjectTask,
+  updateEstimateItem,
   updateEstimateStatus,
   updateEstimateTier,
   updateLeadDetails,
@@ -38,6 +39,9 @@ const selectClass =
 
 const inputClass =
   "w-full border border-divider rounded-lg px-3 py-2 text-sm text-navy bg-white focus:outline-none focus:ring-2 focus:ring-blue-accent focus:ring-offset-2 transition";
+
+const tableInputClass =
+  "w-full border border-divider rounded px-2 py-1 text-sm text-navy bg-white focus:outline-none focus:ring-2 focus:ring-blue-accent focus:ring-offset-1 transition";
 
 const summaryClass = "text-lg font-semibold text-navy cursor-pointer";
 
@@ -246,12 +250,44 @@ export default async function LeadDetailPage({ params }: { params: Promise<{ id:
                 <tbody>
                   {items.map((item) => (
                     <tr key={item.id} className="border-b border-divider last:border-0">
-                      <td className="py-2 text-navy">{item.label}</td>
-                      <td className="py-2 text-navy">${item.price.toLocaleString()}</td>
-                      <td className="py-2 text-navy">{item.quantity}</td>
+                      <td className="py-2">
+                        <input
+                          form={`item-form-${item.id}`}
+                          name="label"
+                          defaultValue={item.label}
+                          className={tableInputClass}
+                        />
+                      </td>
+                      <td className="py-2">
+                        <input
+                          form={`item-form-${item.id}`}
+                          name="price"
+                          type="number"
+                          min="0"
+                          step="1"
+                          defaultValue={item.price}
+                          className={`${tableInputClass} w-24`}
+                        />
+                      </td>
+                      <td className="py-2">
+                        <input
+                          form={`item-form-${item.id}`}
+                          name="quantity"
+                          type="number"
+                          min="1"
+                          step="1"
+                          defaultValue={item.quantity}
+                          className={`${tableInputClass} w-16`}
+                        />
+                      </td>
                       <td className="py-2 text-navy">${(item.price * item.quantity).toLocaleString()}</td>
-                      <td className="py-2 text-right">
-                        <form action={deleteEstimateItem.bind(null, item.id, estimate.id, lead.id)}>
+                      <td className="py-2 text-right whitespace-nowrap">
+                        <form id={`item-form-${item.id}`} action={updateEstimateItem.bind(null, item.id, estimate.id, lead.id)} className="inline">
+                          <button type="submit" className="text-xs text-blue-accent hover:underline mr-2">
+                            Save
+                          </button>
+                        </form>
+                        <form action={deleteEstimateItem.bind(null, item.id, estimate.id, lead.id)} className="inline">
                           <button type="submit" className="text-xs text-neutral-mid hover:text-red-600">
                             Remove
                           </button>
@@ -321,14 +357,19 @@ export default async function LeadDetailPage({ params }: { params: Promise<{ id:
             </form>
           ) : (
             <div>
-              <form action={updateProjectStatus.bind(null, project.id, lead.id)} className="mb-4">
-                <AutoSubmitSelect
-                  name="status"
-                  defaultValue={project.status}
-                  options={PROJECT_STATUS_OPTIONS}
-                  className={selectClass}
-                />
-              </form>
+              <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+                <form action={updateProjectStatus.bind(null, project.id, lead.id)}>
+                  <AutoSubmitSelect
+                    name="status"
+                    defaultValue={project.status}
+                    options={PROJECT_STATUS_OPTIONS}
+                    className={selectClass}
+                  />
+                </form>
+                <Link href={`/admin/leads/${lead.id}/contract`} className="text-sm text-blue-accent hover:underline">
+                  Generate contract →
+                </Link>
+              </div>
 
               {PROJECT_STATUS_OPTIONS.map((stageOption) => {
                 const stageTasks = tasks.filter((task) => task.stage === stageOption.value);
