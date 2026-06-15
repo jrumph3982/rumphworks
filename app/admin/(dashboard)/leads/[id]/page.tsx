@@ -10,6 +10,7 @@ import {
   LEAD_STATUS_OPTIONS,
   PROJECT_STATUS_OPTIONS,
 } from "@/lib/crm";
+import { suggestTierFromIntake } from "@/lib/pricing";
 import { AutoSubmitSelect } from "./auto-submit-select";
 import {
   addEstimateItem,
@@ -122,7 +123,7 @@ export default async function LeadDetailPage({ params }: { params: Promise<{ id:
           <form action={createEstimate.bind(null, lead.id)} className="flex flex-wrap items-end gap-3">
             <div>
               <label className="block text-sm font-medium text-navy mb-1">Tier</label>
-              <select name="tier" defaultValue={ESTIMATE_TIER_OPTIONS[0].value} className={selectClass}>
+              <select name="tier" defaultValue={suggestTierFromIntake(intake)} className={selectClass}>
                 {ESTIMATE_TIER_OPTIONS.map((option) => (
                   <option key={option.value} value={option.value}>
                     {option.label}
@@ -136,6 +137,9 @@ export default async function LeadDetailPage({ params }: { params: Promise<{ id:
             >
               Create estimate
             </button>
+            <p className="text-xs text-neutral-mid">
+              Starting line items will be generated from their questionnaire answers - edit or remove anything after.
+            </p>
           </form>
         ) : (
           <div>

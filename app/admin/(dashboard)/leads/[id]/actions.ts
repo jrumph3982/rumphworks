@@ -5,6 +5,8 @@ import { eq } from "drizzle-orm";
 import { db } from "@/db";
 import { estimateItems, estimates, leads, projects } from "@/db/schema";
 import type { EstimateStatus, EstimateTier, LeadStatus, ProjectStatus } from "@/lib/crm";
+import type { IntakeData } from "@/lib/intake";
+import { generateEstimateItems } from "@/lib/pricing";
 
 export async function updateLeadStatus(leadId: number, formData: FormData) {
   const status = formData.get("status") as LeadStatus;
@@ -15,7 +17,21 @@ export async function updateLeadStatus(leadId: number, formData: FormData) {
 
 export async function createEstimate(leadId: number, formData: FormData) {
   const tier = formData.get("tier") as EstimateTier;
-  await db.insert(estimates).values({ leadId, tier });
+  const [{ id: estimateId }] = await db.insert(estimates).values({ leadId, tier }).$returningId();
+
+  const [lead] = await db.select().from(leads).where(eq(leads.id, leadId));
+  const intake: IntakeData | null = lead?.intakeData
+    ? typeof lead.intakeData === "string"
+      ? JSON.parse(lead.intakeData)
+      : (lead.intakeData as IntakeData)
+    : null;
+
+  const suggested = generateEstimateItems(intake, tier);
+  if (suggested.length > 0) {
+    await db.insert(estimateItems).values(suggested.map((item) => ({ estimateId, ...item })));
+    await recalcEstimateTotal(estimateId);
+  }
+
   revalidatePath(`/admin/leads/${leadId}`);
 }
 
