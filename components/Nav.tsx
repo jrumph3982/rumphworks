@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import Link from "next/link";
 
 export default function Nav() {
   const [scrolled, setScrolled] = useState(false);
@@ -12,10 +13,11 @@ export default function Nav() {
   }, []);
 
   const links = [
-    { label: "Work", href: "#work" },
-    { label: "Services", href: "#services" },
-    { label: "About", href: "#about" },
-    { label: "Contact", href: "#contact" },
+    { label: "Work", href: "/#work" },
+    { label: "Services", href: "/#services" },
+    { label: "Process", href: "/#process" },
+    { label: "About", href: "/#about" },
+    { label: "Contact", href: "/#contact" },
   ];
 
   return (
@@ -25,26 +27,26 @@ export default function Nav() {
       }`}
     >
       <nav className="max-w-7xl mx-auto px-6 flex items-center justify-between h-28">
-        <a href="#" onClick={() => setMobileOpen(false)} className="flex items-center">
+        <Link href="/" onClick={() => setMobileOpen(false)} className="flex items-center">
           <img src="/logo.png" alt="Rumphworks" className="h-[130px] w-auto drop-shadow-lg" />
-        </a>
+        </Link>
 
         <div className="hidden md:flex items-center gap-8">
           {links.map((link) => (
-            <a
+            <Link
               key={link.href}
               href={link.href}
               className="text-xs font-semibold tracking-widest uppercase text-neutral-mid hover:text-navy transition-colors"
             >
               {link.label}
-            </a>
+            </Link>
           ))}
-          <a
-            href="#contact"
+          <Link
+            href="/#contact"
             className="bg-blue-accent text-white text-sm font-semibold px-6 py-2.5 rounded-full hover:bg-blue-600 transition-colors"
           >
             Let&apos;s Talk
-          </a>
+          </Link>
         </div>
 
         <button
@@ -67,22 +69,22 @@ export default function Nav() {
       {mobileOpen && (
         <div className="md:hidden bg-white border-t border-divider px-6 py-6 flex flex-col gap-6">
           {links.map((link) => (
-            <a
+            <Link
               key={link.href}
               href={link.href}
               className="text-sm font-semibold tracking-widest uppercase text-neutral-mid hover:text-navy transition-colors"
               onClick={() => setMobileOpen(false)}
             >
               {link.label}
-            </a>
+            </Link>
           ))}
-          <a
-            href="#contact"
+          <Link
+            href="/#contact"
             className="bg-blue-accent text-white text-sm font-semibold px-6 py-3 rounded-full text-center hover:bg-blue-600 transition-colors"
             onClick={() => setMobileOpen(false)}
           >
             Let&apos;s Talk
-          </a>
+          </Link>
         </div>
       )}
     </header>

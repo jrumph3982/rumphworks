@@ -65,7 +65,7 @@ const projects: Project[] = [
     name: "Financial Check-In",
     category: "Web Application",
     description:
-      "A guided financial planning tool for couples. Walks partners through honest conversations about money — no spreadsheets, no jargon, just clarity.",
+      "A guided financial planning tool for couples. Walks partners through honest conversations about money, no spreadsheets, no jargon, just clarity.",
     tags: ["Web App", "Interactive", "Personal Finance"],
     images: [
       "/portfolio/finance.png",
@@ -130,7 +130,7 @@ function ProjectCard({ project }: { project: Project }) {
       <div className="relative h-[420px] overflow-hidden bg-slate-50 group">
         <img
           src={project.images[idx]}
-          alt={`${project.name} — screen ${idx + 1}`}
+          alt={`${project.name}, screen ${idx + 1}`}
           className={`w-full h-full object-contain transition-opacity duration-[180ms] ${
             fading ? "opacity-0" : "opacity-100"
           }`}

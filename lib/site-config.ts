@@ -1,6 +1,6 @@
 export const siteConfig = {
   name: "Rumphworks",
-  title: "Rumphworks — Websites & Web Apps for Small Businesses",
+  title: "Rumphworks | Websites & Web Apps for Small Businesses",
   description:
     "Custom websites and web applications for small businesses and entrepreneurs nationwide. Fast, reliable, and built to last.",
   url: "https://rumphworks.com",

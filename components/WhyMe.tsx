@@ -15,7 +15,7 @@ const points = [
     number: "03",
     title: "Built to last, not just to launch",
     description:
-      "Your site will be fast, secure, and maintainable — not something you're rebuilding in two years.",
+      "Your site will be fast, secure, and maintainable, not something you're rebuilding in two years.",
   },
 ];
 
