@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import Link from "next/link";
 
 type Status = "idle" | "sending" | "success" | "error";
 
@@ -126,6 +127,12 @@ export default function Contact() {
               >
                 {status === "sending" ? "Sending..." : "Send Message"}
               </button>
+              <Link
+                href="/start-a-project"
+                className="border border-divider text-navy font-semibold px-8 py-4 rounded-lg hover:border-blue-accent hover:text-blue-accent transition-all hover:-translate-y-0.5"
+              >
+                Start a Project
+              </Link>
               {status === "error" && (
                 <p className="text-sm text-red-600">
                   Something went wrong. Please try again, or email{" "}

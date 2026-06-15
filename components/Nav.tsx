@@ -42,6 +42,12 @@ export default function Nav() {
             </Link>
           ))}
           <Link
+            href="/start-a-project"
+            className="text-xs font-semibold tracking-widest uppercase text-neutral-mid hover:text-navy transition-colors"
+          >
+            Start a Project
+          </Link>
+          <Link
             href="/#contact"
             className="bg-blue-accent text-white text-sm font-semibold px-6 py-2.5 rounded-full hover:bg-blue-600 transition-colors"
           >
@@ -78,6 +84,13 @@ export default function Nav() {
               {link.label}
             </Link>
           ))}
+          <Link
+            href="/start-a-project"
+            className="text-sm font-semibold tracking-widest uppercase text-neutral-mid hover:text-navy transition-colors"
+            onClick={() => setMobileOpen(false)}
+          >
+            Start a Project
+          </Link>
           <Link
             href="/#contact"
             className="bg-blue-accent text-white text-sm font-semibold px-6 py-3 rounded-full text-center hover:bg-blue-600 transition-colors"
