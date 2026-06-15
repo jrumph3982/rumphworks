@@ -73,7 +73,7 @@ export default function Wizard() {
         </h2>
         <p className="text-neutral-mid leading-relaxed max-w-md mx-auto">
           I&apos;ve got your project details and will take a look shortly. I&apos;ll follow up at{" "}
-          <span className="font-semibold text-navy">{data.contact.email}</span> within one business day.
+          <span className="font-semibold text-navy">{data.contact.email}</span> within 2-3 business days.
         </p>
       </div>
     );
