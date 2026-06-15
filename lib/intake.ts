@@ -150,6 +150,80 @@ function labelsFor(options: Option[], values: string[]): string {
   return values.map((value) => labelFor(options, value)).join(", ");
 }
 
+/** Same as labelsFor, but always renders in the option list's order regardless of selection order - keeps diffs stable when only the order changes. */
+function canonicalLabelsFor(options: Option[], values: string[]): string {
+  const selected = options.filter((option) => values.includes(option.value)).map((option) => option.label);
+  return selected.length > 0 ? selected.join(", ") : "(none selected)";
+}
+
+/** Parses the leads.intake_data column, which mysql2 returns as a JSON string on this MariaDB host rather than a parsed object. */
+export function parseIntakeData(raw: unknown): IntakeData | null {
+  if (!raw) return null;
+  return typeof raw === "string" ? (JSON.parse(raw) as IntakeData) : (raw as IntakeData);
+}
+
+export type ContactFields = {
+  name: string;
+  email: string;
+  phone: string;
+  businessName: string;
+};
+
+export type FieldChange = { label: string; oldValue: string; newValue: string };
+
+/** Diffs the editable lead contact + questionnaire fields, returning one entry per field that actually changed, with human-readable old/new values. */
+export function diffLeadDetails(
+  oldContact: ContactFields,
+  oldIntake: IntakeData,
+  newContact: ContactFields,
+  newIntake: IntakeData,
+): FieldChange[] {
+  const changes: FieldChange[] = [];
+
+  const text = (label: string, oldVal: string, newVal: string) => {
+    if ((oldVal || "") === (newVal || "")) return;
+    changes.push({ label, oldValue: oldVal || "(blank)", newValue: newVal || "(blank)" });
+  };
+  const select = (label: string, options: Option[], oldVal: string, newVal: string) => {
+    if (oldVal === newVal) return;
+    changes.push({
+      label,
+      oldValue: labelFor(options, oldVal) || "(not answered)",
+      newValue: labelFor(options, newVal) || "(not answered)",
+    });
+  };
+  const multi = (label: string, options: Option[], oldVal: string[], newVal: string[]) => {
+    const oldLabel = canonicalLabelsFor(options, oldVal);
+    const newLabel = canonicalLabelsFor(options, newVal);
+    if (oldLabel === newLabel) return;
+    changes.push({ label, oldValue: oldLabel, newValue: newLabel });
+  };
+
+  text("Name", oldContact.name, newContact.name);
+  text("Email", oldContact.email, newContact.email);
+  text("Phone", oldContact.phone, newContact.phone);
+  text("Business name", oldContact.businessName, newContact.businessName);
+  text("What they do", oldIntake.contact.businessDescription, newIntake.contact.businessDescription);
+
+  select("Why now", MOTIVATION_OPTIONS, oldIntake.goals.motivation, newIntake.goals.motivation);
+  multi("Main goals", MAIN_GOAL_OPTIONS, oldIntake.goals.mainGoals, newIntake.goals.mainGoals);
+  select("Site size needed", SCOPE_OPTIONS, oldIntake.scope.sizeNeeded, newIntake.scope.sizeNeeded);
+  select("Existing website", HAS_WEBSITE_OPTIONS, oldIntake.content.hasExistingWebsite, newIntake.content.hasExistingWebsite);
+  text("Existing website URL", oldIntake.content.existingWebsiteUrl, newIntake.content.existingWebsiteUrl);
+  multi("Pages needed", PAGE_OPTIONS, oldIntake.content.pagesNeeded, newIntake.content.pagesNeeded);
+  select("Content readiness", CONTENT_READINESS_OPTIONS, oldIntake.content.contentReadiness, newIntake.content.contentReadiness);
+  select("Existing brand", BRAND_OPTIONS, oldIntake.design.hasBrand, newIntake.design.hasBrand);
+  text("Style examples", oldIntake.design.styleExamples, newIntake.design.styleExamples);
+  select("Style preference", STYLE_OPTIONS, oldIntake.design.stylePreference, newIntake.design.stylePreference);
+  multi("Special features", FEATURE_OPTIONS, oldIntake.features, newIntake.features);
+  select("Launch timeline", LAUNCH_TIMELINE_OPTIONS, oldIntake.timeline.launchTimeline, newIntake.timeline.launchTimeline);
+  select("Budget range", BUDGET_OPTIONS, oldIntake.timeline.budgetRange, newIntake.timeline.budgetRange);
+  select("Hosting interest", HOSTING_INTEREST_OPTIONS, oldIntake.hosting.interest, newIntake.hosting.interest);
+  text("Hosting notes", oldIntake.hosting.additionalNotes, newIntake.hosting.additionalNotes);
+
+  return changes;
+}
+
 /** Builds a plain-text summary of the questionnaire responses (goals through hosting), excluding contact info. */
 export function formatIntakeSummary(data: IntakeData): string {
   const lines: string[] = [];

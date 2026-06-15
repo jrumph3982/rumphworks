@@ -1,8 +1,10 @@
 import {
+  boolean,
   int,
   json,
   mysqlEnum,
   mysqlTable,
+  text,
   timestamp,
   varchar,
 } from "drizzle-orm/mysql-core";
@@ -71,4 +73,35 @@ export const projects = mysqlTable("projects", {
     .default("discovery"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow().onUpdateNow(),
+});
+
+export const projectTasks = mysqlTable("project_tasks", {
+  id: int("id").autoincrement().primaryKey(),
+  projectId: int("project_id")
+    .notNull()
+    .references(() => projects.id, { onDelete: "cascade" }),
+  label: varchar("label", { length: 255 }).notNull(),
+  stage: mysqlEnum("stage", [
+    "discovery",
+    "design",
+    "build",
+    "launch",
+    "support",
+  ]).notNull(),
+  done: boolean("done").notNull().default(false),
+  sortOrder: int("sort_order").notNull().default(0),
+  isCustom: boolean("is_custom").notNull().default(false),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
+export const leadFieldChanges = mysqlTable("lead_field_changes", {
+  id: int("id").autoincrement().primaryKey(),
+  leadId: int("lead_id")
+    .notNull()
+    .references(() => leads.id, { onDelete: "cascade" }),
+  fieldLabel: varchar("field_label", { length: 255 }).notNull(),
+  oldValue: text("old_value").notNull(),
+  newValue: text("new_value").notNull(),
+  note: text("note"),
+  changedAt: timestamp("changed_at").notNull().defaultNow(),
 });
